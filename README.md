@@ -1,4 +1,4 @@
-### How to Run Your Program (Windows)
+### How to Run Program (Windows)
 1. Open the Cmd, type the following command and press the enter button as shown in the below:<br />
 ```pip install virtualenv```<br />
 2. Create a new virtual environment inside that project's directory to avoid unnecessary issues:<br />
