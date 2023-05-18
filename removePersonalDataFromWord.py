@@ -32,6 +32,7 @@ def remove_personal_data(directory_path):
             address_regex = re.compile(r'\d+ [\w\s]+, [\w\s]+, [\w\s]+')
             fullName_regex = re.compile(paragraph.text)
            
+            url_regex = re.compile(r'http://\S+|https://\S+')
 
             # Loop through each paragraph in the document
             for para in doc.paragraphs:
@@ -142,7 +143,7 @@ def remove_personal_data(directory_path):
             
             # Save the modified document
             
-            new_filename = f"{new_name}{nameIndex}.docx"
+            new_filename = f"{nameIndex+1}.docx"
             doc.save(os.path.join('results', new_filename))
 # Call the function with the file path of the CV
 #remove_personal_data('summarization-resume-vacancy-matching/docx_after_preprocessing/docx/CV Dmitry Itskov java_FullStackDeveloper.docx')
