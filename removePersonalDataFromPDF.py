@@ -12,6 +12,7 @@ def modify_text(original_text):
     address_regex = re.compile(r'\d+ [\w\s]+, [\w\s]+, [\w\s]+')
     phone_regex = re.compile(r'\+?[0-9]{1,3}[-\s]?(\([0-9]{1,3}\)[-.\s]?|[0-9]{1,3}[-.\s]?){1,2}[0-9]{1,4}[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}')
     linkedin_regex = re.compile(r'linkedin\.com\/in\/[a-zA-Z0-9_-]+')
+    telegram_username_regex = re.compile(r'@(\w+)')
 
     # Remove personal information from the original text
     modified_text = phone_regex.sub('', original_text)
@@ -20,6 +21,7 @@ def modify_text(original_text):
     modified_text = address_regex.sub('', modified_text)
     modified_text = phone_regex.sub('', modified_text)
     modified_text = linkedin_regex.sub('', modified_text)
+    modified_text = telegram_username_regex.sub('', modified_text)
 
     # Remove non-XML compatible characters
     modified_text = remove_non_xml_chars(modified_text)
