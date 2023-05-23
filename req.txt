@@ -1,9 +1,0 @@
-pip install python-docx
-pip install spacy
-pip install pandas
-python -m spacy download en_core_web_sm
-pip install pdfplumber
-pip install docx
-
-
-
