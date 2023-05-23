@@ -18,7 +18,7 @@ def remove_personal_data(directory_path):
         
         if filename.endswith(".docx"):
            
-            # Load the Word document
+            # Load the _Word document
             doc = Document(os.path.join(directory_path, filename))
             
             paragraph = doc.paragraphs[0]

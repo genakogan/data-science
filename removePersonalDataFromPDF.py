@@ -31,7 +31,6 @@ def modify_text(original_text):
     
     return modified_text
 
-import string
 
 def remove_non_xml_chars(text):
     xml_compatible_text = re.sub(r'[^\x09\x0A\x0D\x20-\x7E]', '', text)
