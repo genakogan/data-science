@@ -44,7 +44,7 @@ data = {
     'https://knigogo.net/knigi/palata-6/#lib_book_download': ['Палата № 6', ['Антон Павлович Чехов'], '2007', ['Русская классика', 'Литература 19 века']]
 }
 
-header = ['key', 'name', 'author', 'year', 'genre']
+header = ['link', 'name', 'author', 'year', 'genre']
 
 # Define the filename for the CSV file
 filename = 'books.csv'
