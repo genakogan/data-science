@@ -27,15 +27,15 @@ def url_download_for_each_book(url):
 
 
 def get_book_name_or_year(url, key):
+    print(url,key)
     response = requests.get(url)
         
     soup = BeautifulSoup(response.text, "html.parser")
     li_elem = soup.find("li", string=lambda text: text and key in text)
-    
+    if li_elem is None:
+        return "XXXX"
     # Depend on key return book name or year 
     return li_elem.text.split(":")[1].strip()
-
-
 
 def  get_author_or_genre(url, key):
     response = requests.get(url)
@@ -44,7 +44,7 @@ def  get_author_or_genre(url, key):
     author_or_genre = re.findall(r''+str(key)+'\s*(.*?)</li>', html_text)
  
     if author_or_genre:
-        author_or_genre = [genre.strip() for genre in author_or_genre[0].split(',')]
+        author_or_genre = [item.strip() for item in author_or_genre[0].split(',')]
     else:
         print(url)
         print("No result found.")
@@ -61,7 +61,7 @@ def  get_author_or_genre(url, key):
 
 
 def url_text_download_for_each_book(url_download):
-    file_text, url_text, allYears = [], [], []
+    file_text, url_text = [], []
     dicAllData={}
     
     for url in url_download:
@@ -92,7 +92,7 @@ def url_text_download_for_each_book(url_download):
 
 
   
-    return url_text,dicAllData
+    return url_text, dicAllData
 
 # download html and return parsed doc or None on error
 def download_url(urlpath):
@@ -148,16 +148,19 @@ def csvWriter(dataToscvFile):
 
 
 if __name__ == '__main__':
-    url = 'https://knigogo.net/besplatnye-knigi/page/2/'
-    save_path = 'test'
-    # create the save directory if needed
-    makedirs(save_path, exist_ok=True)
-    # get a url of books that you can download
-    url_download = url_download_for_each_book(url)
-    # get a url of text files you can download
-    """ oneBook=[]
-    oneBook.append(url_download[3]) """
-  
-    url_text,dataToscvFile = url_text_download_for_each_book(url_download)
-    csvWriter(dataToscvFile)
-    download_all_books(url_text)
+    for i in range(1,33):
+      
+        url = 'https://knigogo.net/besplatnye-knigi/page/' + str(i) + '/'
+        save_path = 'page'+str(i)
+
+        # create the save directory if needed
+        makedirs(save_path, exist_ok=True)
+        # get a url of books that you can download
+        url_download = url_download_for_each_book(url)
+        # get a url of text files you can download
+        """ oneBook=[]
+        oneBook.append(url_download[3]) """
+    
+        url_text,dataToscvFile = url_text_download_for_each_book(url_download)
+        csvWriter(dataToscvFile)
+        download_all_books(url_text)
