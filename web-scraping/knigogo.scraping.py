@@ -59,10 +59,10 @@ def  get_author_or_genre(url, key):
     return filtered_data
 
 
-
+dicAllData={}
 def url_text_download_for_each_book(url_download):
     file_text, url_text = [], []
-    dicAllData={}
+   
     
     for url in url_download:
         allValues=[]
@@ -92,7 +92,7 @@ def url_text_download_for_each_book(url_download):
 
 
   
-    return url_text, dicAllData
+    return url_text
 
 # download html and return parsed doc or None on error
 def download_url(urlpath):
@@ -125,19 +125,19 @@ def download_all_books(url_text):
 
         
 def csvWriter(dataToscvFile):
-
     print(dataToscvFile)
     header = ['Link', 'Book name', 'Author name', 'Year', 'Genres']
-
+    
     # Define the filename for the CSV file
     filename = 'books.csv'
-
-    # Open the file in write mode
-    with open(filename, 'w', newline='', encoding='utf-8') as file:
+    
+    # Open the file in append mode
+    with open(filename, 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         
-        # Write the header to the CSV file
-        writer.writerow(header)
+        # Check if the file is empty and write the header if needed
+        if file.tell() == 0:
+            writer.writerow(header)
         
         # Write each row of data to the CSV file
         for key, book_data in dataToscvFile.items():
@@ -161,6 +161,9 @@ if __name__ == '__main__':
         """ oneBook=[]
         oneBook.append(url_download[3]) """
     
-        url_text,dataToscvFile = url_text_download_for_each_book(url_download)
-        csvWriter(dataToscvFile)
+        """  url_text,dataToscvFile = url_text_download_for_each_book(url_download) """
+        url_text = url_text_download_for_each_book(url_download)
+       
         download_all_books(url_text)
+
+print(dicAllData)
