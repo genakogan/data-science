@@ -1,0 +1,1 @@
+directory_path = "summarization-resume-vacancy-matching/pdf_after_preprocessing/pdf"
