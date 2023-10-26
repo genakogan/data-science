@@ -37,18 +37,32 @@ def rewrite_with_utf8_encoding(input_file, output_file):
         # Open the output file in 'utf-8' mode and prevent newline characters from being added
         with open(output_file_encoded, 'w', encoding='utf-8', newline='') as f:
             f.write(content_text)
-        print(f"Rewritten: {input_file} to {output_file_encoded}")
+        #print(f"Rewritten: {input_file} to {output_file_encoded}")
 
     except UnicodeDecodeError:
         print(f"Error decoding {input_file}. Skipping...")
 
-# Function to copy .txt files from input to output preserving folder structure
+
+def rename_folders(input_folder, prefixes):
+    for root, dirs, _ in os.walk(input_folder):
+        for dir_name in dirs:
+            for prefix in prefixes:
+                if dir_name.startswith(prefix):
+                    original_path = os.path.join(root, dir_name)
+                    new_dir_name = dir_name[len(prefix):]  # Remove the prefix
+                    new_path = os.path.join(root, new_dir_name)
+                    os.rename(original_path, new_path)
+                    print(f"Renamed {dir_name} to {new_dir_name}")
+
 def copy_and_rewrite_txt_files(input_folder, after_encoding):
+    # First, remove the prefix from folder names
+    rename_folders(input_folder, ['download_books_', 'download_book_'])
+    
     total_files = 0  # To keep track of the total number of files processed
     success_count = 0  # To count the successfully rewritten files
     error_count = 0  # To count the files with decoding errors
-    
-    for root, dirs, files in os.walk(input_folder):
+
+    for root, _, files in os.walk(input_folder):
         for filename in files:
             if filename.endswith(".txt"):
                 input_file = os.path.join(root, filename)
@@ -62,10 +76,13 @@ def copy_and_rewrite_txt_files(input_folder, after_encoding):
                 except UnicodeDecodeError:
                     print(f"Error decoding {input_file}. Skipping...")
                     error_count += 1
-                
+
                 total_files += 1
 
+    # Print summary information if needed
     print(f"Finished rewriting files. Total files processed: {total_files}, Successfully rewritten: {success_count}, Files with decoding errors: {error_count}")
+
+
 
 
 #======================================================================================================
@@ -130,7 +147,7 @@ def remove_author_name(after_encoding,without_author_name ):
 #======================================================================================================
 
 # Function to tokenize and split text into chunks
-def tokenize_and_split_text(text, chunk_size=1000):
+def tokenize_and_split_text(text, chunk_size=300):
     # Tokenize the text
     words = re.findall(r'\b\w+\b', text)
 
@@ -153,14 +170,14 @@ def tokenize_and_split_text(text, chunk_size=1000):
 def split_to_chunks(without_author_name, result):
     # Create the output folder if it doesn't exist
     os.makedirs(result, exist_ok=True)
-
+ 
     # Iterate through subfolders and files in the input folder
     for root, dirs, files in os.walk(without_author_name):
         for file_name in files:
             if file_name.endswith('.txt'):
                 # Construct the full path to the book file
                 book_path = os.path.join(root, file_name)
-
+               
                 # Read the book's text content
                 with open(book_path, 'r', encoding='utf-8') as file:
                     text = file.read()
@@ -178,9 +195,13 @@ def split_to_chunks(without_author_name, result):
                 # Create a dictionary to track chunks with the same name
                 chunks_by_name = {}
 
+                # remove .txt from file name
+                file_name_without_extension = file_name.replace(".txt", "")
+                #print(file_name_without_extension)
+
                 # Write chunks to separate files in the subfolder
                 for i, chunk in enumerate(chunks):
-                    chunk_name = f'chunk_{i + 1}.txt'
+                    chunk_name = f'{file_name_without_extension}_chunk_{i + 1}.txt'
                     chunk_path = os.path.join(output_subfolder, chunk_name)
 
                     # Extract the base file name without extension
@@ -210,9 +231,9 @@ if __name__ == "__main__":
     # step 1: encodeing files 
     copy_and_rewrite_txt_files(BASE_FOLDER, AFTER_ENCODING)
     # step 2: remove author name 
-    #remove_author_name(AFTER_ENCODING,WITHOUT_AUTHOR_NAME)
+    remove_author_name(AFTER_ENCODING,WITHOUT_AUTHOR_NAME)
     # step 3: create chunks for all txt (books) filesinput_folder
-    #split_to_chunks(WITHOUT_AUTHOR_NAME,RESULT)
+    split_to_chunks(WITHOUT_AUTHOR_NAME,RESULT)
 
 # # amount of word in chunk
 # def countWordsInChunk():
